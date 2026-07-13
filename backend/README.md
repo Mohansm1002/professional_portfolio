@@ -5,7 +5,6 @@ Spring Boot API for the customizable developer portfolio.
 ## Run
 
 ```powershell
-docker compose up -d
 mvn.cmd spring-boot:run
 ```
 
@@ -15,19 +14,19 @@ Without PostgreSQL/Docker, you can smoke-test the API with the in-memory local p
 mvn.cmd spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-Default local settings:
+Default settings:
 
 - API: `http://localhost:18080/api/v1`
-- PostgreSQL: `jdbc:postgresql://localhost:5432/anti_portfolio`
+- PostgreSQL: Neon pooled database `ep-royal-block-at4q08vt-pooler.c-9.us-east-1.aws.neon.tech/neondb`
 - Seeded admin: `mohan2005@admin.com`
 - Seeded password: `mohanadmin`
 
 Override with environment variables when needed:
 
 ```powershell
-$env:DATABASE_URL="jdbc:postgresql://localhost:5432/anti_portfolio"
-$env:DATABASE_USERNAME="postgres"
-$env:DATABASE_PASSWORD="password"
+$env:DATABASE_URL="jdbc:postgresql://ep-royal-block-at4q08vt-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require"
+$env:DATABASE_USERNAME="neondb_owner"
+$env:DATABASE_PASSWORD="<database-password>"
 $env:JWT_SECRET="replace-with-a-long-random-secret-of-at-least-32-characters"
 ```
 
