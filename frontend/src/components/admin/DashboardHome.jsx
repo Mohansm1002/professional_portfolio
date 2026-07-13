@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ExternalLink, FolderOpen, Inbox, Star, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { getAdminDashboard, getAdminMessages } from '../../lib/api';
 
 const cardVariants = {
@@ -66,9 +67,9 @@ const DashboardHome = () => {
         >
           <div className="flex items-center justify-between mb-5">
             <h3 className="font-bold font-heading text-white">Recent Messages</h3>
-            <a href="/admin/messages" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
+            <Link to="/admin/messages" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
               View all <ArrowUpRight size={12} />
-            </a>
+            </Link>
           </div>
           <div className="space-y-3">
             {recentMessages.length === 0 ? (
@@ -102,9 +103,9 @@ const DashboardHome = () => {
               { label: 'Manage Projects', href: '/admin/projects', desc: 'Add, edit, or remove projects' },
               { label: 'View Messages', href: '/admin/messages', desc: `${dashboard.unread_messages} unread contact submissions` },
             ].map(action => (
-              <a
+              <Link
                 key={action.label}
-                href={action.href}
+                to={action.href}
                 className="flex items-center justify-between p-4 rounded-xl bg-white/4 border border-white/8 hover:border-purple-500/40 hover:bg-white/6 transition-all group"
               >
                 <div>
@@ -112,7 +113,7 @@ const DashboardHome = () => {
                   <p className="text-xs text-slate-500 mt-0.5">{action.desc}</p>
                 </div>
                 <ArrowUpRight size={16} className="text-slate-600 group-hover:text-purple-400 transition-colors" />
-              </a>
+              </Link>
             ))}
             <a
               href="/"
