@@ -23,6 +23,7 @@ SEED_ADMIN_PASSWORD=replace-with-admin-password
 
 Do not set `PORT` manually on Render; Render provides it and the backend reads it with `server.port=${PORT:18080}`.
 If `SEED_ENABLED=true`, `SEED_ADMIN_PASSWORD` is required. This prevents deployments from creating an admin account with a public fallback password.
+After the first successful deploy creates or updates the admin account, you can set `SEED_ENABLED=false` to stop resetting the admin password on every backend restart.
 
 ## Frontend Service
 
