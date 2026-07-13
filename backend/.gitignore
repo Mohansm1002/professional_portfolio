@@ -1,4 +1,6 @@
 target/
 uploads/
 .env
+.env.*
+!.env.example
 *.log

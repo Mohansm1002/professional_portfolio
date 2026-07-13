@@ -2,12 +2,16 @@ server:
   port: ${PORT:18080}
 
 spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:backend/.env[.properties]
   application:
     name: portfolio-backend
   datasource:
     url: "${DATABASE_URL:jdbc:postgresql://ep-royal-block-at4q08vt-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require}"
     username: "${DATABASE_USERNAME:neondb_owner}"
-    password: "${DATABASE_PASSWORD:npg_eU2OocVmyX9R}"
+    password: "${DATABASE_PASSWORD:}"
   jpa:
     hibernate:
       ddl-auto: update

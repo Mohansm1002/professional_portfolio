@@ -8,6 +8,8 @@ Spring Boot API for the customizable developer portfolio.
 mvn.cmd spring-boot:run
 ```
 
+The backend reads `backend/.env` by default. Use `backend/.env.example` as the template when setting up another machine or deployment, and keep the real database password in `.env` or host environment variables.
+
 Without PostgreSQL/Docker, you can smoke-test the API with the in-memory local profile:
 
 ```powershell
@@ -21,7 +23,7 @@ Default settings:
 - Seeded admin: `mohan2005@admin.com`
 - Seeded password: `mohanadmin`
 
-Override with environment variables when needed:
+Main environment variables:
 
 ```powershell
 $env:DATABASE_URL="jdbc:postgresql://ep-royal-block-at4q08vt-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require"
