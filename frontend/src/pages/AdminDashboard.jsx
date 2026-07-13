@@ -9,6 +9,8 @@ import DashboardHome from '../components/admin/DashboardHome';
 import HeroEditor from '../components/admin/HeroEditor';
 import ProjectsManager from '../components/admin/ProjectsManager';
 import SkillsManager from '../components/admin/SkillsManager';
+import ServicesManager from '../components/admin/ServicesManager';
+import ExperienceManager from '../components/admin/ExperienceManager';
 import MessagesInbox from '../components/admin/MessagesInbox';
 import { addAdminSessionExpiredListener, getStoredToken, logout } from '../lib/api';
 
@@ -148,6 +150,8 @@ const AdminDashboard = () => {
             <Route path="hero" element={<HeroEditor />} />
             <Route path="projects" element={<ProjectsManager />} />
             <Route path="skills" element={<SkillsManager />} />
+            <Route path="services" element={<ServicesManager />} />
+            <Route path="experience" element={<ExperienceManager />} />
             <Route path="messages" element={<MessagesInbox />} />
             <Route path="*" element={<ComingSoon />} />
           </Routes>

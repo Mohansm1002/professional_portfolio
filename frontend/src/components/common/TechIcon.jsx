@@ -10,7 +10,6 @@ import {
   SiMysql,
   SiNodedotjs,
   SiNumpy,
-  SiOpenjdk,
   SiPandas,
   SiPostman,
   SiPython,
@@ -20,6 +19,7 @@ import {
   SiStreamlit,
   SiTailwindcss,
 } from 'react-icons/si';
+import { FaJava } from 'react-icons/fa';
 import { VscVscode } from 'react-icons/vsc';
 
 const techIconMap = {
@@ -31,7 +31,7 @@ const techIconMap = {
   github: [SiGithub, '#F8FAFC'],
   html: [SiHtml5, '#E34F26'],
   html5: [SiHtml5, '#E34F26'],
-  java: [SiOpenjdk, '#F89820'],
+  java: [FaJava, '#F89820'],
   javascript: [SiJavascript, '#F7DF1E'],
   js: [SiJavascript, '#F7DF1E'],
   matplotlib: [SiPython, '#3776AB'],

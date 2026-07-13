@@ -246,6 +246,48 @@ export async function deleteAdminSkill(id) {
   notifyPortfolioUpdated();
 }
 
+export async function getAdminServices() {
+  const data = await adminRequest('/admin/services');
+  return data.map(normalizeService);
+}
+
+export async function saveAdminService(service) {
+  const method = service.id ? 'PUT' : 'POST';
+  const path = service.id ? `/admin/services/${service.id}` : '/admin/services';
+  const saved = await adminRequest(path, {
+    method,
+    body: toServicePayload(service),
+  });
+  notifyPortfolioUpdated();
+  return normalizeService(saved);
+}
+
+export async function deleteAdminService(id) {
+  await adminRequest(`/admin/services/${id}`, { method: 'DELETE' });
+  notifyPortfolioUpdated();
+}
+
+export async function getAdminExperience() {
+  const data = await adminRequest('/admin/experience');
+  return data.map(normalizeExperience);
+}
+
+export async function saveAdminExperience(item) {
+  const method = item.id ? 'PUT' : 'POST';
+  const path = item.id ? `/admin/experience/${item.id}` : '/admin/experience';
+  const saved = await adminRequest(path, {
+    method,
+    body: toExperiencePayload(item),
+  });
+  notifyPortfolioUpdated();
+  return normalizeExperience(saved);
+}
+
+export async function deleteAdminExperience(id) {
+  await adminRequest(`/admin/experience/${id}`, { method: 'DELETE' });
+  notifyPortfolioUpdated();
+}
+
 export async function getAdminMessages() {
   const data = await adminRequest('/admin/messages');
   return data.map(normalizeMessage);
@@ -428,7 +470,8 @@ function normalizeService(service) {
     title: service.title || 'Service',
     description: service.description || service.desc || '',
     desc: service.description || service.desc || '',
-    is_visible: service.is_visible ?? true,
+    is_visible: service.is_visible ?? service.isVisible ?? true,
+    order_index: Number(service.order_index ?? service.orderIndex ?? 0),
   };
 }
 
@@ -457,13 +500,23 @@ function normalizeExperience(item) {
   const inferredType = /\b(b\.?tech|education|certificate|higher secondary|hsc|college|school)\b/i.test(title)
     ? 'education'
     : 'work';
+  const companyLogoUrl = item.company_logo_url || item.companyLogoUrl || '';
+  const start = item.start || item.start_date || item.startDate || '';
+  const end = item.end || item.end_date || item.endDate || '';
+  const description = item.desc || item.description || '';
 
   return {
     ...item,
-    start: item.start || item.start_date || '',
-    end: item.end || item.end_date || '',
-    desc: item.desc || item.description || '',
+    company_logo_url: resolveImageUrl(companyLogoUrl),
+    start,
+    start_date: start,
+    end,
+    end_date: end,
+    is_present: item.is_present ?? item.isPresent ?? false,
+    description,
+    desc: description,
     type: item.type || inferredType,
+    order_index: Number(item.order_index ?? item.orderIndex ?? 0),
   };
 }
 
@@ -539,6 +592,31 @@ function toSkillCategoryPayload(category) {
     id: category.id,
     name: category.name,
     order_index: Number(category.order_index ?? category.orderIndex ?? 0),
+  };
+}
+
+function toServicePayload(service) {
+  return {
+    id: service.id,
+    icon: service.icon || 'monitor',
+    title: service.title,
+    description: service.description || service.desc,
+    is_visible: Boolean(service.is_visible ?? service.isVisible ?? true),
+    order_index: Number(service.order_index ?? service.orderIndex ?? 0),
+  };
+}
+
+function toExperiencePayload(item) {
+  return {
+    id: item.id,
+    role: item.role,
+    company: item.company,
+    company_logo_url: item.company_logo_url || item.companyLogoUrl || '',
+    start_date: item.start_date || item.start || '',
+    end_date: item.is_present || item.isPresent ? '' : item.end_date || item.end || '',
+    is_present: Boolean(item.is_present ?? item.isPresent ?? false),
+    description: item.description || item.desc,
+    order_index: Number(item.order_index ?? item.orderIndex ?? 0),
   };
 }
 

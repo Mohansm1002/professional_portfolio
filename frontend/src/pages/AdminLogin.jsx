@@ -6,8 +6,8 @@ import { DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD, getStoredToken, login } fr
 const AdminLogin = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [email, setEmail] = useState(DEFAULT_ADMIN_EMAIL);
-  const [password, setPassword] = useState(DEFAULT_ADMIN_PASSWORD);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
 

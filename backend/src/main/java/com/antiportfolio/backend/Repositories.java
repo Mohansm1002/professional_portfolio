@@ -1,5 +1,6 @@
 package com.antiportfolio.backend;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -22,9 +23,11 @@ interface StatRepository extends JpaRepository<Stat, Long> {
 }
 
 interface SkillCategoryRepository extends JpaRepository<SkillCategory, Long> {
+    Optional<SkillCategory> findByNameIgnoreCase(String name);
 }
 
 interface SkillRepository extends JpaRepository<Skill, Long> {
+    List<Skill> findByCategory(SkillCategory category);
 }
 
 interface ServiceItemRepository extends JpaRepository<ServiceItem, Long> {
