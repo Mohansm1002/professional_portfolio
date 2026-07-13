@@ -17,11 +17,6 @@ const TOKEN_KEY = "portfolio_admin_token";
 const REFRESH_KEY = "portfolio_data_updated_at";
 const ADMIN_SESSION_EXPIRED_EVENT = "portfolio-admin-session-expired";
 
-export const DEFAULT_ADMIN_EMAIL =
-  import.meta.env.VITE_ADMIN_EMAIL || "mohan2005@admin.com";
-export const DEFAULT_ADMIN_PASSWORD =
-  import.meta.env.VITE_ADMIN_PASSWORD || "mohanadmin";
-
 const defaultAbout = {
   heading: "B.Tech IT Student & Full Stack Developer",
   photo_url:

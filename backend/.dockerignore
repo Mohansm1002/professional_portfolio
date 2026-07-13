@@ -1,5 +1,6 @@
 target/
 uploads/
+uploads-local/
 .env
 .env.*
 !.env.example

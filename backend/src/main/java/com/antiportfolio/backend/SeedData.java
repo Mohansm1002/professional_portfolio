@@ -36,6 +36,10 @@ public class SeedData {
             }
 
             String seededAdminEmail = adminEmail.trim().toLowerCase(Locale.ROOT);
+            if (seededAdminEmail.isBlank() || adminPassword == null || adminPassword.isBlank()) {
+                throw new IllegalStateException("SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD must be set when seeding is enabled.");
+            }
+
             AdminUser admin = adminUsers.findByEmail(seededAdminEmail).orElseGet(AdminUser::new);
             admin.email = seededAdminEmail;
             admin.passwordHash = passwordEncoder.encode(adminPassword);

@@ -36,6 +36,6 @@ app:
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:720}
   upload-dir: ${UPLOAD_DIR:uploads}
   seed:
-    enabled: ${SEED_ENABLED:true}
+    enabled: ${SEED_ENABLED:false}
     admin-email: ${SEED_ADMIN_EMAIL:mohan2005@admin.com}
-    admin-password: ${SEED_ADMIN_PASSWORD:mohanadmin}
+    admin-password: ${SEED_ADMIN_PASSWORD:}

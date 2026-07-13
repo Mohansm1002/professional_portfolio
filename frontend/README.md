@@ -8,7 +8,7 @@ React + Vite frontend for the portfolio.
 npm.cmd run dev
 ```
 
-The frontend reads `frontend/.env` by default. Use `frontend/.env.example` as the template when setting up another machine or deployment.
+The frontend reads `frontend/.env` by default for local runs. Use `frontend/.env.example` for local setup and `frontend/.env.production.example` for deployment variables.
 
 Default local API:
 

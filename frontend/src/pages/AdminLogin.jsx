@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Lock, LogIn, Mail, ShieldCheck } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD, getStoredToken, login } from '../lib/api';
+import { getStoredToken, login } from '../lib/api';
 
 const AdminLogin = () => {
   const [searchParams] = useSearchParams();
