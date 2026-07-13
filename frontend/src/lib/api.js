@@ -6,38 +6,45 @@ import {
   services,
   projects,
   experience,
-} from './mockData';
+} from "./mockData";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:18080/api/v1').replace(/\/$/, '');
-const API_PUBLIC_ROOT = API_BASE_URL.replace(/\/api\/v1$/, '');
-const TOKEN_KEY = 'portfolio_admin_token';
-const REFRESH_KEY = 'portfolio_data_updated_at';
-const ADMIN_SESSION_EXPIRED_EVENT = 'portfolio-admin-session-expired';
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://professional-portfolio-o6m9.onrender.com/api/v1"
+).replace(/\/$/, "");
+const API_PUBLIC_ROOT = API_BASE_URL.replace(/\/api\/v1$/, "");
+const TOKEN_KEY = "portfolio_admin_token";
+const REFRESH_KEY = "portfolio_data_updated_at";
+const ADMIN_SESSION_EXPIRED_EVENT = "portfolio-admin-session-expired";
 
-export const DEFAULT_ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'mohan2005@admin.com';
-export const DEFAULT_ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'mohanadmin';
+export const DEFAULT_ADMIN_EMAIL =
+  import.meta.env.VITE_ADMIN_EMAIL || "mohan2005@admin.com";
+export const DEFAULT_ADMIN_PASSWORD =
+  import.meta.env.VITE_ADMIN_PASSWORD || "mohanadmin";
 
 const defaultAbout = {
-  heading: 'B.Tech IT Student & Full Stack Developer',
-  photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
-  bio: 'I am a passionate and dedicated B.Tech Information Technology student with strong knowledge of programming and web development. I build responsive web applications using HTML, CSS, JavaScript, React.js, Java, Node.js, Express.js, and MySQL, and I am looking for an entry-level opportunity to contribute to innovative projects.',
+  heading: "B.Tech IT Student & Full Stack Developer",
+  photo_url:
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+  bio: "I am a passionate and dedicated B.Tech Information Technology student with strong knowledge of programming and web development. I build responsive web applications using HTML, CSS, JavaScript, React.js, Java, Node.js, Express.js, and MySQL, and I am looking for an entry-level opportunity to contribute to innovative projects.",
   highlights: [
-    'Full Stack Developer Intern at Roriri Software Solutions PVT. LTD.',
-    'Hands-on experience building responsive interfaces and REST APIs.',
-    'Comfortable with CRUD operations, MySQL databases, Git, GitHub, VS Code, and Postman.',
-    'Strong problem-solving mindset, quick learning ability, and time management.',
+    "Full Stack Developer Intern at Roriri Software Solutions PVT. LTD.",
+    "Hands-on experience building responsive interfaces and REST APIs.",
+    "Comfortable with CRUD operations, MySQL databases, Git, GitHub, VS Code, and Postman.",
+    "Strong problem-solving mindset, quick learning ability, and time management.",
   ],
-  cv_url: '#',
+  cv_url: "#",
 };
 
 const defaultSettings = {
-  site_title: 'Alex Developer Portfolio',
-  meta_description: 'Building beautiful, performant digital experiences with clean code and great UX.',
-  primary_color: '#6366f1',
-  secondary_color: '#22d3ee',
-  bg_color: '#0A0A12',
-  font_heading: 'Sora',
-  font_body: 'Inter',
+  site_title: "Alex Developer Portfolio",
+  meta_description:
+    "Building beautiful, performant digital experiences with clean code and great UX.",
+  primary_color: "#6366f1",
+  secondary_color: "#22d3ee",
+  bg_color: "#0A0A12",
+  font_heading: "Sora",
+  font_body: "Inter",
 };
 
 export const fallbackPortfolioData = normalizePortfolioData({
@@ -55,7 +62,9 @@ export const fallbackPortfolioData = normalizePortfolioData({
 export function notifyPortfolioUpdated() {
   const value = String(Date.now());
   localStorage.setItem(REFRESH_KEY, value);
-  window.dispatchEvent(new CustomEvent('portfolio-data-updated', { detail: value }));
+  window.dispatchEvent(
+    new CustomEvent("portfolio-data-updated", { detail: value }),
+  );
 }
 
 export function addPortfolioUpdateListeners(callback) {
@@ -65,14 +74,14 @@ export function addPortfolioUpdateListeners(callback) {
   const onCustom = () => callback();
   const onFocus = () => callback();
 
-  window.addEventListener('storage', onStorage);
-  window.addEventListener('portfolio-data-updated', onCustom);
-  window.addEventListener('focus', onFocus);
+  window.addEventListener("storage", onStorage);
+  window.addEventListener("portfolio-data-updated", onCustom);
+  window.addEventListener("focus", onFocus);
 
   return () => {
-    window.removeEventListener('storage', onStorage);
-    window.removeEventListener('portfolio-data-updated', onCustom);
-    window.removeEventListener('focus', onFocus);
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener("portfolio-data-updated", onCustom);
+    window.removeEventListener("focus", onFocus);
   };
 }
 
@@ -96,15 +105,15 @@ export async function loadPortfolioData() {
     experienceData,
     settings,
   ] = await Promise.all([
-    apiGet('/hero'),
-    apiGet('/about'),
-    apiGet('/social-links'),
-    apiGet('/stats'),
-    apiGet('/skills'),
-    apiGet('/services'),
-    apiGet('/projects'),
-    apiGet('/experience'),
-    apiGet('/settings'),
+    apiGet("/hero"),
+    apiGet("/about"),
+    apiGet("/social-links"),
+    apiGet("/stats"),
+    apiGet("/skills"),
+    apiGet("/services"),
+    apiGet("/projects"),
+    apiGet("/experience"),
+    apiGet("/settings"),
   ]);
 
   return normalizePortfolioData({
@@ -121,13 +130,13 @@ export async function loadPortfolioData() {
 }
 
 export async function login(email, password) {
-  const response = await apiRequest('/auth/login', {
-    method: 'POST',
+  const response = await apiRequest("/auth/login", {
+    method: "POST",
     body: { email, password },
   });
 
   if (!response?.token) {
-    throw new Error('Login failed: the backend did not return a token.');
+    throw new Error("Login failed: the backend did not return a token.");
   }
 
   localStorage.setItem(TOKEN_KEY, response.token);
@@ -143,16 +152,16 @@ export function logout() {
 }
 
 export async function getAdminDashboard() {
-  return adminRequest('/admin/dashboard');
+  return adminRequest("/admin/dashboard");
 }
 
 export async function getAdminHero() {
-  return normalizeHero(await adminRequest('/admin/hero'));
+  return normalizeHero(await adminRequest("/admin/hero"));
 }
 
 export async function saveAdminHero(hero) {
-  const saved = await adminRequest('/admin/hero', {
-    method: 'PUT',
+  const saved = await adminRequest("/admin/hero", {
+    method: "PUT",
     body: hero,
   });
   notifyPortfolioUpdated();
@@ -161,10 +170,10 @@ export async function saveAdminHero(hero) {
 
 export async function uploadAdminMedia(file) {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
-  const media = await adminRequest('/admin/media/upload', {
-    method: 'POST',
+  const media = await adminRequest("/admin/media/upload", {
+    method: "POST",
     body: formData,
   });
 
@@ -172,25 +181,25 @@ export async function uploadAdminMedia(file) {
 }
 
 export function getResumeDownloadUrl(hero) {
-  if (!hero?.resume_url || hero.resume_url === '#') {
-    return hero?.secondary_btn_link || '#';
+  if (!hero?.resume_url || hero.resume_url === "#") {
+    return hero?.secondary_btn_link || "#";
   }
 
   return `${API_BASE_URL}/resume/download`;
 }
 
 export async function getAdminProjects() {
-  const data = await adminRequest('/admin/projects');
+  const data = await adminRequest("/admin/projects");
   return data.map(normalizeProject);
 }
 
 export async function getProjectCategories() {
-  return adminRequest('/admin/project-categories');
+  return adminRequest("/admin/project-categories");
 }
 
 export async function saveAdminProject(project) {
-  const method = project.id ? 'PUT' : 'POST';
-  const path = project.id ? `/admin/projects/${project.id}` : '/admin/projects';
+  const method = project.id ? "PUT" : "POST";
+  const path = project.id ? `/admin/projects/${project.id}` : "/admin/projects";
   const saved = await adminRequest(path, {
     method,
     body: toProjectPayload(project),
@@ -200,23 +209,25 @@ export async function saveAdminProject(project) {
 }
 
 export async function deleteAdminProject(id) {
-  await adminRequest(`/admin/projects/${id}`, { method: 'DELETE' });
+  await adminRequest(`/admin/projects/${id}`, { method: "DELETE" });
   notifyPortfolioUpdated();
 }
 
 export async function getAdminSkills() {
-  const data = await adminRequest('/admin/skills');
+  const data = await adminRequest("/admin/skills");
   return data.map(normalizeSkill);
 }
 
 export async function getSkillCategories() {
-  const data = await adminRequest('/admin/skill-categories');
+  const data = await adminRequest("/admin/skill-categories");
   return data.map(normalizeSkillCategory);
 }
 
 export async function saveSkillCategory(category) {
-  const method = category.id ? 'PUT' : 'POST';
-  const path = category.id ? `/admin/skill-categories/${category.id}` : '/admin/skill-categories';
+  const method = category.id ? "PUT" : "POST";
+  const path = category.id
+    ? `/admin/skill-categories/${category.id}`
+    : "/admin/skill-categories";
   const saved = await adminRequest(path, {
     method,
     body: toSkillCategoryPayload(category),
@@ -226,13 +237,13 @@ export async function saveSkillCategory(category) {
 }
 
 export async function deleteSkillCategory(id) {
-  await adminRequest(`/admin/skill-categories/${id}`, { method: 'DELETE' });
+  await adminRequest(`/admin/skill-categories/${id}`, { method: "DELETE" });
   notifyPortfolioUpdated();
 }
 
 export async function saveAdminSkill(skill) {
-  const method = skill.id ? 'PUT' : 'POST';
-  const path = skill.id ? `/admin/skills/${skill.id}` : '/admin/skills';
+  const method = skill.id ? "PUT" : "POST";
+  const path = skill.id ? `/admin/skills/${skill.id}` : "/admin/skills";
   const saved = await adminRequest(path, {
     method,
     body: toSkillPayload(skill),
@@ -242,18 +253,18 @@ export async function saveAdminSkill(skill) {
 }
 
 export async function deleteAdminSkill(id) {
-  await adminRequest(`/admin/skills/${id}`, { method: 'DELETE' });
+  await adminRequest(`/admin/skills/${id}`, { method: "DELETE" });
   notifyPortfolioUpdated();
 }
 
 export async function getAdminServices() {
-  const data = await adminRequest('/admin/services');
+  const data = await adminRequest("/admin/services");
   return data.map(normalizeService);
 }
 
 export async function saveAdminService(service) {
-  const method = service.id ? 'PUT' : 'POST';
-  const path = service.id ? `/admin/services/${service.id}` : '/admin/services';
+  const method = service.id ? "PUT" : "POST";
+  const path = service.id ? `/admin/services/${service.id}` : "/admin/services";
   const saved = await adminRequest(path, {
     method,
     body: toServicePayload(service),
@@ -263,18 +274,18 @@ export async function saveAdminService(service) {
 }
 
 export async function deleteAdminService(id) {
-  await adminRequest(`/admin/services/${id}`, { method: 'DELETE' });
+  await adminRequest(`/admin/services/${id}`, { method: "DELETE" });
   notifyPortfolioUpdated();
 }
 
 export async function getAdminExperience() {
-  const data = await adminRequest('/admin/experience');
+  const data = await adminRequest("/admin/experience");
   return data.map(normalizeExperience);
 }
 
 export async function saveAdminExperience(item) {
-  const method = item.id ? 'PUT' : 'POST';
-  const path = item.id ? `/admin/experience/${item.id}` : '/admin/experience';
+  const method = item.id ? "PUT" : "POST";
+  const path = item.id ? `/admin/experience/${item.id}` : "/admin/experience";
   const saved = await adminRequest(path, {
     method,
     body: toExperiencePayload(item),
@@ -284,26 +295,28 @@ export async function saveAdminExperience(item) {
 }
 
 export async function deleteAdminExperience(id) {
-  await adminRequest(`/admin/experience/${id}`, { method: 'DELETE' });
+  await adminRequest(`/admin/experience/${id}`, { method: "DELETE" });
   notifyPortfolioUpdated();
 }
 
 export async function getAdminMessages() {
-  const data = await adminRequest('/admin/messages');
+  const data = await adminRequest("/admin/messages");
   return data.map(normalizeMessage);
 }
 
 export async function markMessageRead(id) {
-  return normalizeMessage(await adminRequest(`/admin/messages/${id}`, { method: 'PATCH' }));
+  return normalizeMessage(
+    await adminRequest(`/admin/messages/${id}`, { method: "PATCH" }),
+  );
 }
 
 export async function deleteAdminMessage(id) {
-  return adminRequest(`/admin/messages/${id}`, { method: 'DELETE' });
+  return adminRequest(`/admin/messages/${id}`, { method: "DELETE" });
 }
 
 export async function sendContactMessage(message) {
-  return apiRequest('/contact', {
-    method: 'POST',
+  return apiRequest("/contact", {
+    method: "POST",
     body: message,
   });
 }
@@ -311,7 +324,7 @@ export async function sendContactMessage(message) {
 async function adminRequest(path, options = {}) {
   const token = getStoredToken();
   if (!token) {
-    const error = new Error('Please log in to continue.');
+    const error = new Error("Please log in to continue.");
     error.status = 401;
     throw error;
   }
@@ -325,7 +338,9 @@ async function adminRequest(path, options = {}) {
     if (error.status === 401 || error.status === 403) {
       logout();
       window.dispatchEvent(new Event(ADMIN_SESSION_EXPIRED_EVENT));
-      const sessionError = new Error('Your admin session expired. Please log in again.');
+      const sessionError = new Error(
+        "Your admin session expired. Please log in again.",
+      );
       sessionError.status = error.status;
       throw sessionError;
     }
@@ -339,21 +354,22 @@ async function apiGet(path) {
 
 async function apiRequest(path, options = {}) {
   const headers = {
-    Accept: 'application/json',
+    Accept: "application/json",
     ...(options.headers || {}),
   };
 
   const request = {
-    method: options.method || 'GET',
+    method: options.method || "GET",
     headers,
   };
 
-  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+  const isFormData =
+    typeof FormData !== "undefined" && options.body instanceof FormData;
 
   if (options.body !== undefined && isFormData) {
     request.body = options.body;
   } else if (options.body !== undefined) {
-    headers['Content-Type'] = 'application/json';
+    headers["Content-Type"] = "application/json";
     request.body = JSON.stringify(options.body);
   }
 
@@ -377,7 +393,11 @@ async function apiRequest(path, options = {}) {
   }
 
   if (!response.ok) {
-    const error = new Error(data?.error || data?.message || `Request failed with HTTP ${response.status}`);
+    const error = new Error(
+      data?.error ||
+        data?.message ||
+        `Request failed with HTTP ${response.status}`,
+    );
     error.status = response.status;
     error.data = data;
     throw error;
@@ -404,7 +424,10 @@ function normalizeHero(hero = heroContent) {
   const merged = {
     ...heroContent,
     ...hero,
-    roles: Array.isArray(hero?.roles) && hero.roles.length ? hero.roles : heroContent.roles,
+    roles:
+      Array.isArray(hero?.roles) && hero.roles.length
+        ? hero.roles
+        : heroContent.roles,
   };
 
   return {
@@ -418,38 +441,47 @@ function normalizeAbout(about = defaultAbout) {
   return {
     ...defaultAbout,
     ...about,
-    highlights: Array.isArray(about?.highlights) && about.highlights.length ? about.highlights : defaultAbout.highlights,
+    highlights:
+      Array.isArray(about?.highlights) && about.highlights.length
+        ? about.highlights
+        : defaultAbout.highlights,
   };
 }
 
 function normalizeSocialLink(link) {
   return {
     id: link.id,
-    platform: link.platform || link.icon || 'Link',
-    url: link.url || '#',
-    icon: link.icon || link.platform || 'link',
+    platform: link.platform || link.icon || "Link",
+    url: link.url || "#",
+    icon: link.icon || link.platform || "link",
   };
 }
 
 function normalizeStat(stat) {
   return {
     ...stat,
-    number: String(stat.number ?? '0'),
-    suffix: stat.suffix ?? '',
-    label: stat.label || 'Stat',
-    icon: stat.icon || 'star',
+    number: String(stat.number ?? "0"),
+    suffix: stat.suffix ?? "",
+    label: stat.label || "Stat",
+    icon: stat.icon || "star",
   };
 }
 
 function normalizeSkill(skill) {
-  const iconUrl = skill.icon_url || skill.iconUrl || skill.name || 'code';
+  const iconUrl = skill.icon_url || skill.iconUrl || skill.name || "code";
 
   return {
     id: skill.id,
-    name: skill.name || 'Skill',
+    name: skill.name || "Skill",
     icon_url: resolveImageUrl(iconUrl),
-    category: typeof skill.category === 'string' ? skill.category : skill.category?.name || 'Tools',
-    category_id: typeof skill.category === 'object' ? skill.category?.id : skill.category_id,
+    category:
+      typeof skill.category === "string"
+        ? skill.category
+        : skill.category?.name || "Tools",
+    category_id:
+      typeof skill.category === "object"
+        ? skill.category?.id
+        : skill.category_id,
     proficiency: Number(skill.proficiency ?? 0),
     order_index: Number(skill.order_index ?? skill.orderIndex ?? 0),
   };
@@ -458,7 +490,7 @@ function normalizeSkill(skill) {
 function normalizeSkillCategory(category) {
   return {
     id: category.id,
-    name: category.name || 'Tools',
+    name: category.name || "Tools",
     order_index: Number(category.order_index ?? category.orderIndex ?? 0),
   };
 }
@@ -466,44 +498,57 @@ function normalizeSkillCategory(category) {
 function normalizeService(service) {
   return {
     id: service.id,
-    icon: service.icon || 'monitor',
-    title: service.title || 'Service',
-    description: service.description || service.desc || '',
-    desc: service.description || service.desc || '',
+    icon: service.icon || "monitor",
+    title: service.title || "Service",
+    description: service.description || service.desc || "",
+    desc: service.description || service.desc || "",
     is_visible: service.is_visible ?? service.isVisible ?? true,
     order_index: Number(service.order_index ?? service.orderIndex ?? 0),
   };
 }
 
 function normalizeProject(project) {
-  const categoryName = typeof project.category === 'string' ? project.category : project.category?.name;
-  const coverUrl = project.cover || project.cover_image_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
+  const categoryName =
+    typeof project.category === "string"
+      ? project.category
+      : project.category?.name;
+  const coverUrl =
+    project.cover ||
+    project.cover_image_url ||
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80";
   return {
     ...project,
-    category: categoryName || 'Web',
-    category_id: typeof project.category === 'object' ? project.category?.id : project.category_id,
-    category_object: typeof project.category === 'object' ? project.category : undefined,
+    category: categoryName || "Web",
+    category_id:
+      typeof project.category === "object"
+        ? project.category?.id
+        : project.category_id,
+    category_object:
+      typeof project.category === "object" ? project.category : undefined,
     cover: resolveImageUrl(coverUrl),
     cover_image_url: resolveImageUrl(coverUrl),
-    desc: project.description || project.desc || '',
-    description: project.description || project.desc || '',
+    desc: project.description || project.desc || "",
+    description: project.description || project.desc || "",
     tags: Array.isArray(project.tags) ? project.tags : [],
-    live_url: project.live_url || '#',
-    repo_url: project.repo_url || '#',
+    live_url: project.live_url || "#",
+    repo_url: project.repo_url || "#",
     is_featured: project.is_featured ?? false,
     is_published: project.is_published ?? true,
   };
 }
 
 function normalizeExperience(item) {
-  const title = `${item.role || ''} ${item.company || ''}`;
-  const inferredType = /\b(b\.?tech|education|certificate|higher secondary|hsc|college|school)\b/i.test(title)
-    ? 'education'
-    : 'work';
-  const companyLogoUrl = item.company_logo_url || item.companyLogoUrl || '';
-  const start = item.start || item.start_date || item.startDate || '';
-  const end = item.end || item.end_date || item.endDate || '';
-  const description = item.desc || item.description || '';
+  const title = `${item.role || ""} ${item.company || ""}`;
+  const inferredType =
+    /\b(b\.?tech|education|certificate|higher secondary|hsc|college|school)\b/i.test(
+      title,
+    )
+      ? "education"
+      : "work";
+  const companyLogoUrl = item.company_logo_url || item.companyLogoUrl || "";
+  const start = item.start || item.start_date || item.startDate || "";
+  const end = item.end || item.end_date || item.endDate || "";
+  const description = item.desc || item.description || "";
 
   return {
     ...item,
@@ -523,8 +568,11 @@ function normalizeExperience(item) {
 function normalizeTestimonial(testimonial) {
   return {
     ...testimonial,
-    name: testimonial.name || testimonial.client_name || 'Client',
-    photo: testimonial.photo || testimonial.photo_url || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
+    name: testimonial.name || testimonial.client_name || "Client",
+    photo:
+      testimonial.photo ||
+      testimonial.photo_url ||
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
     rating: Number(testimonial.rating ?? 5),
   };
 }
@@ -538,14 +586,14 @@ function normalizeMessage(message) {
 }
 
 function normalizeMedia(media) {
-  const fileUrl = media.file_url || media.fileUrl || '';
+  const fileUrl = media.file_url || media.fileUrl || "";
 
   return {
     ...media,
     file_url: resolvePublicUrl(fileUrl),
     raw_file_url: fileUrl,
-    file_name: media.file_name || media.fileName || 'Uploaded file',
-    file_type: media.file_type || media.fileType || '',
+    file_name: media.file_name || media.fileName || "Uploaded file",
+    file_type: media.file_type || media.fileType || "",
   };
 }
 
@@ -561,8 +609,8 @@ function toProjectPayload(project) {
     category,
     cover_image_url: project.cover_image_url || project.cover,
     description: project.description || project.desc,
-    live_url: project.live_url || '#',
-    repo_url: project.repo_url || '#',
+    live_url: project.live_url || "#",
+    repo_url: project.repo_url || "#",
     is_featured: Boolean(project.is_featured),
     is_published: Boolean(project.is_published),
     order_index: project.order_index || 0,
@@ -572,7 +620,7 @@ function toProjectPayload(project) {
 }
 
 function toSkillPayload(skill) {
-  const categoryName = skill.category || 'Tools';
+  const categoryName = skill.category || "Tools";
   const category = skill.category_id
     ? { id: skill.category_id, name: categoryName }
     : { name: categoryName };
@@ -598,7 +646,7 @@ function toSkillCategoryPayload(category) {
 function toServicePayload(service) {
   return {
     id: service.id,
-    icon: service.icon || 'monitor',
+    icon: service.icon || "monitor",
     title: service.title,
     description: service.description || service.desc,
     is_visible: Boolean(service.is_visible ?? service.isVisible ?? true),
@@ -611,9 +659,10 @@ function toExperiencePayload(item) {
     id: item.id,
     role: item.role,
     company: item.company,
-    company_logo_url: item.company_logo_url || item.companyLogoUrl || '',
-    start_date: item.start_date || item.start || '',
-    end_date: item.is_present || item.isPresent ? '' : item.end_date || item.end || '',
+    company_logo_url: item.company_logo_url || item.companyLogoUrl || "",
+    start_date: item.start_date || item.start || "",
+    end_date:
+      item.is_present || item.isPresent ? "" : item.end_date || item.end || "",
     is_present: Boolean(item.is_present ?? item.isPresent ?? false),
     description: item.description || item.desc,
     order_index: Number(item.order_index ?? item.orderIndex ?? 0),
@@ -621,15 +670,15 @@ function toExperiencePayload(item) {
 }
 
 function formatDate(value) {
-  if (!value) return '';
+  if (!value) return "";
   return new Date(value).toLocaleString();
 }
 
 function resolvePublicUrl(value) {
-  if (!value || value === '#') return value || '#';
+  if (!value || value === "#") return value || "#";
   if (/^(https?:|data:|blob:|mailto:|tel:|#)/i.test(value)) return value;
 
-  if (value.startsWith('/')) {
+  if (value.startsWith("/")) {
     return `${API_PUBLIC_ROOT}${value}`;
   }
 
@@ -638,11 +687,11 @@ function resolvePublicUrl(value) {
 
 function resolveImageUrl(value) {
   const publicUrl = resolvePublicUrl(value);
-  if (!publicUrl || publicUrl === '#') return publicUrl;
+  if (!publicUrl || publicUrl === "#") return publicUrl;
 
   try {
     const url = new URL(publicUrl);
-    if (url.hostname.includes('drive.google.com')) {
+    if (url.hostname.includes("drive.google.com")) {
       const fileId = googleDriveFileId(url);
       if (fileId) {
         return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
@@ -659,5 +708,5 @@ function googleDriveFileId(url) {
   const fileMatch = url.pathname.match(/\/file\/d\/([^/]+)/);
   if (fileMatch) return decodeURIComponent(fileMatch[1]);
 
-  return url.searchParams.get('id');
+  return url.searchParams.get("id");
 }
