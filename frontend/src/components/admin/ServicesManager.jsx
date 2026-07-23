@@ -6,7 +6,9 @@ import {
   Eye,
   EyeOff,
   Globe,
+  Layers,
   Monitor,
+  MonitorSmartphone,
   Palette,
   Pencil,
   Plus,
@@ -23,6 +25,8 @@ import { deleteAdminService, getAdminServices, saveAdminService } from '../../li
 
 const serviceIconOptions = [
   { key: 'monitor', label: 'Web', Icon: Monitor },
+  { key: 'frontenddevelopment', label: 'Frontend Development', Icon: MonitorSmartphone },
+  { key: 'fullstackdevelopment', label: 'Full Stack Development', Icon: Layers },
   { key: 'server', label: 'Backend', Icon: Server },
   { key: 'smartphone', label: 'Mobile', Icon: Smartphone },
   { key: 'palette', label: 'Design', Icon: Palette },
@@ -31,6 +35,16 @@ const serviceIconOptions = [
   { key: 'analytics', label: 'Analytics', Icon: BarChart3 },
   { key: 'code', label: 'Code', Icon: Code2 },
 ];
+
+const serviceIconAliases = {
+  webdevelopment: Monitor,
+  frontend: MonitorSmartphone,
+  responsive: MonitorSmartphone,
+  responsivedevelopment: MonitorSmartphone,
+  fullstack: Layers,
+  fullstackdeveloper: Layers,
+  stack: Layers,
+};
 
 const emptyForm = {
   title: '',
@@ -51,7 +65,7 @@ const sortByOrder = (items) => [...items].sort((a, b) => {
 
 const getServiceIcon = (value = '') => {
   const key = String(value).toLowerCase().replace(/[^a-z0-9]/g, '');
-  return serviceIconOptions.find(option => option.key === key)?.Icon || Wrench;
+  return serviceIconOptions.find(option => option.key === key)?.Icon || serviceIconAliases[key] || Wrench;
 };
 
 const ServicesManager = () => {
@@ -398,7 +412,7 @@ const ServicesManager = () => {
                         <option key={option.key} value={option.key}>{option.label}</option>
                       ))}
                     </datalist>
-                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                       {serviceIconOptions.map(option => {
                         const isSelected = form.icon === option.key;
 
@@ -407,13 +421,13 @@ const ServicesManager = () => {
                             type="button"
                             key={option.key}
                             onClick={() => setValue('icon', option.key)}
-                            className={`flex min-w-0 items-center gap-2 rounded-xl border px-3 py-2 text-left text-xs font-semibold transition-all ${isSelected
+                            className={`flex min-h-11 min-w-0 items-center gap-2 rounded-xl border px-3 py-2 text-left text-xs font-semibold transition-all ${isSelected
                               ? 'border-cyan-400/50 bg-cyan-400/15 text-white'
                               : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white'
                             }`}
                           >
                             <option.Icon size={14} />
-                            <span className="truncate">{option.label}</span>
+                            <span className="leading-tight">{option.label}</span>
                           </button>
                         );
                       })}

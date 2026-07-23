@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Download, FileText, ImageIcon, Plus, Save, Upload, X } from 'lucide-react';
-import { getAdminHero, saveAdminHero, uploadAdminMedia } from '../../lib/api';
+import { DEFAULT_RESUME_URL, getAdminHero, getFileDownloadUrl, saveAdminHero, uploadAdminMedia } from '../../lib/api';
 
 const emptyHero = {
   name: '',
@@ -8,11 +8,11 @@ const emptyHero = {
   availability_text: 'Available for Work',
   bio: '',
   profile_image_url: '',
-  resume_url: '#',
+  resume_url: DEFAULT_RESUME_URL,
   primary_btn_text: 'Contact Me',
   primary_btn_link: '#contact',
   secondary_btn_text: 'Download Resume',
-  secondary_btn_link: '#',
+  secondary_btn_link: DEFAULT_RESUME_URL,
   roles: [],
 };
 
@@ -337,7 +337,7 @@ const HeroEditor = () => {
                 </label>
                 {hasResume && (
                   <a
-                    href={form.resume_url}
+                    href={getFileDownloadUrl(form.resume_url)}
                     download
                     className="btn-secondary px-4"
                     target="_blank"

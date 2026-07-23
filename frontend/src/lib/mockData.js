@@ -5,23 +5,23 @@ export const heroContent = {
   roles: ["Full Stack Developer", "Java Developer", "Problem Solver"],
   bio: "Passionate and dedicated B.Tech IT student with strong knowledge of programming and web development. Skilled in building responsive web applications using HTML, CSS, JavaScript, React.js, Java, Node.js, Express.js, and MySQL.",
   profile_image_url: "https://drive.google.com/file/d/1Dki8UacpcDhZ-ZdiD1hlOmtGipuUwW2z/view?usp=sharing",
-  resume_url: "#",
+  resume_url: "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing",
   primary_btn_text: "Contact Me ->",
   primary_btn_link: "#contact",
   secondary_btn_text: "Download Resume",
-  secondary_btn_link: "#",
+  secondary_btn_link: "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing",
 };
 
 export const socialLinks = [
-  { id: 1, platform: "GitHub", url: "#", icon: "github" },
-  { id: 2, platform: "LinkedIn", url: "#", icon: "linkedin" },
-  { id: 3, platform: "Gmail", url: "#", icon: "gmail" },
+  { id: 1, platform: "GitHub", url: "https://github.com/Mohansm1002", icon: "github" },
+  { id: 2, platform: "LinkedIn", url: "https://www.linkedin.com/in/mohan-mohan-b45222259?utm_source=share_via&utm_content=profile&utm_medium=member_android", icon: "linkedin" },
+  { id: 3, platform: "Gmail", url: "mailto:mohansm1002@gmail.com", icon: "gmail" },
 ];
 
 export const stats = [
   { id: 1, number: "3", suffix: "", label: "Projects", icon: "folder" },
   { id: 2, number: "1", suffix: "", label: "Internship", icon: "clock" },
-  { id: 3, number: "18", suffix: "+", label: "Skills", icon: "users" },
+  { id: 3, number: "15", suffix: "+", label: "Skills", icon: "users" },
   { id: 4, number: "7.8", suffix: "", label: "GPA", icon: "star" },
 ];
 

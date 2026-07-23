@@ -1,11 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BarChart, Code2, Cpu, Globe, Monitor, Palette, Server, ShieldCheck, Smartphone } from 'lucide-react';
+import { BarChart, Code2, Cpu, Globe, Layers, Monitor, MonitorSmartphone, Palette, Server, ShieldCheck, Smartphone } from 'lucide-react';
 
 const iconMap = {
   code: Code2,
   monitor: Monitor,
   web: Monitor,
+  webdevelopment: Monitor,
+  frontend: MonitorSmartphone,
+  frontenddevelopment: MonitorSmartphone,
+  frontenddeveloper: MonitorSmartphone,
+  responsive: MonitorSmartphone,
+  responsivedevelopment: MonitorSmartphone,
+  fullstack: Layers,
+  fullstackdevelopment: Layers,
+  fullstackdeveloper: Layers,
+  stack: Layers,
   server: Server,
   backend: Server,
   database: Server,

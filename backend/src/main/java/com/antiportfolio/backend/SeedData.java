@@ -10,6 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SeedData {
+    private static final String DEFAULT_RESUME_URL = "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing";
+    private static final String GITHUB_URL = "https://github.com/Mohansm1002";
+    private static final String LINKEDIN_URL = "https://www.linkedin.com/in/mohan-mohan-b45222259?utm_source=share_via&utm_content=profile&utm_medium=member_android";
+    private static final String EMAIL_URL = "mailto:mohansm1002@gmail.com";
+
     @Bean
     CommandLineRunner seedPortfolioData(
         @Value("${app.seed.enabled}") boolean enabled,
@@ -54,12 +59,27 @@ public class SeedData {
                 content.roles = List.of("Full Stack Developer", "Java Developer", "Problem Solver");
                 content.bio = "Passionate and dedicated B.Tech IT student with strong knowledge of programming and web development. Skilled in building responsive web applications using HTML, CSS, JavaScript, React.js, Java, Node.js, Express.js, and MySQL.";
                 content.profileImageUrl = "https://drive.google.com/file/d/1Dki8UacpcDhZ-ZdiD1hlOmtGipuUwW2z/view?usp=sharing";
-                content.resumeUrl = "#";
+                content.resumeUrl = DEFAULT_RESUME_URL;
                 content.primaryBtnText = "Contact Me ->";
                 content.primaryBtnLink = "#contact";
                 content.secondaryBtnText = "Download Resume";
-                content.secondaryBtnLink = "#";
+                content.secondaryBtnLink = DEFAULT_RESUME_URL;
                 hero.save(content);
+            } else {
+                hero.findFirstByOrderByIdAsc().ifPresent(content -> {
+                    boolean changed = false;
+                    if (!isUsableUrl(content.resumeUrl)) {
+                        content.resumeUrl = DEFAULT_RESUME_URL;
+                        changed = true;
+                    }
+                    if (!isUsableUrl(content.secondaryBtnLink)) {
+                        content.secondaryBtnLink = DEFAULT_RESUME_URL;
+                        changed = true;
+                    }
+                    if (changed) {
+                        hero.save(content);
+                    }
+                });
             }
 
             if (about.count() == 0) {
@@ -73,17 +93,21 @@ public class SeedData {
                     "Strong problem-solving mindset, quick learning ability, and time management."
                 );
                 content.photoUrl = "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80";
-                content.cvUrl = "#";
+                content.cvUrl = DEFAULT_RESUME_URL;
                 about.save(content);
+            } else {
+                about.findFirstByOrderByIdAsc().ifPresent(content -> {
+                    if (!isUsableUrl(content.cvUrl)) {
+                        content.cvUrl = DEFAULT_RESUME_URL;
+                        about.save(content);
+                    }
+                });
             }
 
-            if (socials.count() == 0) {
-                socials.saveAll(List.of(
-                    social("GitHub", "#", "github", 1),
-                    social("LinkedIn", "#", "linkedin", 2),
-                    social("Gmail", "#", "gmail", 3)
-                ));
-            }
+            List<SocialLink> existingSocials = socials.findAll();
+            upsertSocial(existingSocials, socials, "GitHub", GITHUB_URL, "github", 1);
+            upsertSocial(existingSocials, socials, "LinkedIn", LINKEDIN_URL, "linkedin", 2);
+            upsertSocial(existingSocials, socials, "Gmail", EMAIL_URL, "gmail", 3);
 
             if (stats.count() == 0) {
                 stats.saveAll(List.of(
@@ -224,6 +248,34 @@ public class SeedData {
         return item;
     }
 
+    private static void upsertSocial(
+        List<SocialLink> existingSocials,
+        SocialLinkRepository socials,
+        String platform,
+        String url,
+        String icon,
+        int orderIndex
+    ) {
+        SocialLink item = existingSocials.stream()
+            .filter(link -> matchesSocial(link, platform, icon))
+            .findFirst()
+            .orElseGet(SocialLink::new);
+
+        item.platform = platform;
+        item.url = url;
+        item.icon = icon;
+        item.orderIndex = orderIndex;
+        socials.save(item);
+    }
+
+    private static boolean matchesSocial(SocialLink link, String platform, String icon) {
+        return equalsIgnoreCase(link.platform, platform) || equalsIgnoreCase(link.icon, icon);
+    }
+
+    private static boolean equalsIgnoreCase(String left, String right) {
+        return left != null && right != null && left.equalsIgnoreCase(right);
+    }
+
     private static Stat stat(String icon, String number, String suffix, String label, int orderIndex) {
         Stat item = new Stat();
         item.icon = icon;
@@ -299,6 +351,10 @@ public class SeedData {
         item.description = description;
         item.orderIndex = orderIndex;
         return item;
+    }
+
+    private static boolean isUsableUrl(String value) {
+        return value != null && !value.isBlank() && !"#".equals(value.trim());
     }
 
     private static Testimonial testimonial(String clientName, String designation, String company, String quote, int rating, int orderIndex) {

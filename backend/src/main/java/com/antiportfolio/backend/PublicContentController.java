@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class PublicContentController {
     private static final Pattern GOOGLE_DRIVE_FILE_ID = Pattern.compile("/file/d/([^/]+)");
+    private static final String DEFAULT_RESUME_URL = "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing";
 
     private final HeroContentRepository hero;
     private final AboutContentRepository about;
@@ -75,12 +76,13 @@ public class PublicContentController {
 
     @GetMapping("/resume/download")
     public ResponseEntity<?> downloadResume() throws IOException {
-        HeroContent content = hero.findFirstByOrderByIdAsc().orElseThrow();
-        String resumeUrl = content.resumeUrl;
-
-        if (resumeUrl == null || resumeUrl.isBlank() || "#".equals(resumeUrl.trim())) {
-            throw new NoSuchElementException();
-        }
+        String resumeUrl = hero.findFirstByOrderByIdAsc()
+            .map(content -> content.resumeUrl)
+            .filter(PublicContentController::isUsableUrl)
+            .or(() -> about.findFirstByOrderByIdAsc()
+                .map(content -> content.cvUrl)
+                .filter(PublicContentController::isUsableUrl))
+            .orElse(DEFAULT_RESUME_URL);
 
         String resumePath = pathFromUrl(resumeUrl);
         if (resumePath.startsWith("/uploads/")) {
@@ -180,6 +182,10 @@ public class PublicContentController {
         }
 
         return value;
+    }
+
+    private static boolean isUsableUrl(String value) {
+        return value != null && !value.isBlank() && !"#".equals(value.trim());
     }
 
     private URI toDirectDownloadUri(String value) {

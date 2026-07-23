@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ExternalLink, Eye, X } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
@@ -46,10 +46,7 @@ const Modal = ({ project, onClose }) => (
 );
 
 const Projects = ({ projects = [] }) => {
-  const [active, setActive] = useState('All');
   const [selected, setSelected] = useState(null);
-  const categories = useMemo(() => ['All', ...Array.from(new Set(projects.map(project => project.category).filter(Boolean)))], [projects]);
-  const filtered = active === 'All' ? projects : projects.filter(project => project.category === active);
 
   return (
     <section id="projects" className="py-24 px-6 relative overflow-hidden">
@@ -66,25 +63,9 @@ const Projects = ({ projects = [] }) => {
           <p className="text-slate-400 mt-4 max-w-xl mx-auto">A selection of work I am proud of. Click any card to learn more.</p>
         </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                active === cat
-                  ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 border-transparent text-white shadow-lg shadow-purple-500/30'
-                  : 'border-white/15 text-slate-400 hover:border-white/30 hover:text-white'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
         <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence>
-            {filtered.map((project, i) => (
+            {projects.map((project, i) => (
               <motion.div
                 key={project.id}
                 layout

@@ -5,7 +5,7 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { sendContactMessage } from '../../lib/api';
 
 const contactInfo = {
-  email: 'alex@example.com',
+  email: 'mohansm1002@gmail.com',
   phone: '+1 (555) 000-1234',
   location: 'San Francisco, CA',
 };

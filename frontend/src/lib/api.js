@@ -8,6 +8,17 @@ import {
   experience,
 } from "./mockData";
 
+export const DEFAULT_RESUME_URL =
+  "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing";
+
+const DEFAULT_SOCIAL_LINK_URLS = {
+  github: "https://github.com/Mohansm1002",
+  linkedin: "https://www.linkedin.com/in/mohan-mohan-b45222259?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+  gmail: "mailto:mohansm1002@gmail.com",
+  mail: "mailto:mohansm1002@gmail.com",
+  email: "mailto:mohansm1002@gmail.com",
+};
+
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ||
   "https://professional-portfolio-o6m9.onrender.com/api/v1"
@@ -28,7 +39,7 @@ const defaultAbout = {
     "Comfortable with CRUD operations, MySQL databases, Git, GitHub, VS Code, and Postman.",
     "Strong problem-solving mindset, quick learning ability, and time management.",
   ],
-  cv_url: "#",
+  cv_url: DEFAULT_RESUME_URL,
 };
 
 const defaultSettings = {
@@ -176,11 +187,39 @@ export async function uploadAdminMedia(file) {
 }
 
 export function getResumeDownloadUrl(hero) {
-  if (!hero?.resume_url || hero.resume_url === "#") {
+  const resumeUrl = isUsableUrl(hero?.resume_url)
+    ? hero.resume_url
+    : DEFAULT_RESUME_URL;
+
+  if (!isUsableUrl(resumeUrl)) {
     return hero?.secondary_btn_link || "#";
   }
 
-  return `${API_BASE_URL}/resume/download`;
+  const publicUrl = resolvePublicUrl(resumeUrl);
+  if (isPublicUploadUrl(publicUrl)) {
+    return `${API_BASE_URL}/resume/download`;
+  }
+
+  return getFileDownloadUrl(publicUrl);
+}
+
+export function getFileDownloadUrl(value) {
+  const publicUrl = resolvePublicUrl(value);
+  if (!isUsableUrl(publicUrl)) return "#";
+
+  try {
+    const url = new URL(publicUrl);
+    if (url.hostname.includes("drive.google.com")) {
+      const fileId = googleDriveFileId(url);
+      if (fileId) {
+        return `https://drive.google.com/uc?export=download&id=${encodeURIComponent(fileId)}`;
+      }
+    }
+  } catch {
+    return publicUrl;
+  }
+
+  return publicUrl;
 }
 
 export async function getAdminProjects() {
@@ -424,18 +463,30 @@ function normalizeHero(hero = heroContent) {
         ? hero.roles
         : heroContent.roles,
   };
+  const resumeUrl = isUsableUrl(merged.resume_url)
+    ? merged.resume_url
+    : DEFAULT_RESUME_URL;
+  const secondaryLink = isUsableUrl(merged.secondary_btn_link)
+    ? merged.secondary_btn_link
+    : resumeUrl;
 
   return {
     ...merged,
     profile_image_url: resolveImageUrl(merged.profile_image_url),
-    resume_url: resolvePublicUrl(merged.resume_url),
+    resume_url: resolvePublicUrl(resumeUrl),
+    secondary_btn_link: resolvePublicUrl(secondaryLink),
   };
 }
 
 function normalizeAbout(about = defaultAbout) {
+  const cvUrl = isUsableUrl(about?.cv_url)
+    ? about.cv_url
+    : defaultAbout.cv_url;
+
   return {
     ...defaultAbout,
     ...about,
+    cv_url: resolvePublicUrl(cvUrl),
     highlights:
       Array.isArray(about?.highlights) && about.highlights.length
         ? about.highlights
@@ -444,10 +495,12 @@ function normalizeAbout(about = defaultAbout) {
 }
 
 function normalizeSocialLink(link) {
+  const key = String(link.icon || link.platform || "link").toLowerCase().replace(/[^a-z0-9]/g, "");
+
   return {
     id: link.id,
     platform: link.platform || link.icon || "Link",
-    url: link.url || "#",
+    url: DEFAULT_SOCIAL_LINK_URLS[key] || link.url || "#",
     icon: link.icon || link.platform || "link",
   };
 }
@@ -678,6 +731,24 @@ function resolvePublicUrl(value) {
   }
 
   return value;
+}
+
+function isUsableUrl(value) {
+  return typeof value === "string" && value.trim() !== "" && value.trim() !== "#";
+}
+
+function isPublicUploadUrl(value) {
+  const publicUrl = resolvePublicUrl(value);
+  if (!isUsableUrl(publicUrl)) return false;
+  if (publicUrl.startsWith("/uploads/")) return true;
+
+  try {
+    const url = new URL(publicUrl);
+    const publicRoot = new URL(API_PUBLIC_ROOT);
+    return url.origin === publicRoot.origin && url.pathname.startsWith("/uploads/");
+  } catch {
+    return false;
+  }
 }
 
 function resolveImageUrl(value) {
