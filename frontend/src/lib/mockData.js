@@ -59,8 +59,8 @@ export const projects = [
     cover_image_url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
     description: "Developed a full-stack food delivery web application that lets users browse restaurants, view menus, add items to a cart, place orders, and manage order flow.",
     tags: ["HTML", "CSS", "JavaScript", "React.js", "Node.js", "MySQL", "Git"],
-    live_url: "#",
-    repo_url: "#",
+    live_url: "https://food-delivery-application-o1ww.onrender.com/",
+    repo_url: "https://github.com/Mohansm1002/Food_Delivery_Application",
   },
   {
     id: 2,
@@ -69,8 +69,8 @@ export const projects = [
     cover_image_url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
     description: "Developed a machine learning model to predict laptop prices based on processor, RAM, storage, GPU, and display features, with a Streamlit interface for user input.",
     tags: ["Python", "Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Streamlit", "Git"],
-    live_url: "#",
-    repo_url: "#",
+    live_url: "https://predict-laptop-price-6gz4.onrender.com/",
+    repo_url: "https://github.com/Mohansm1002/Predict_Laptop_Price",
   },
   {
     id: 3,

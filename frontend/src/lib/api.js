@@ -27,6 +27,17 @@ const DEFAULT_SOCIAL_LINK_URLS = {
   email: "mailto:mohansm1002@gmail.com",
 };
 
+const DEFAULT_PROJECT_LINKS = {
+  "food-delivery-application": {
+    live_url: "https://food-delivery-application-o1ww.onrender.com/",
+    repo_url: "https://github.com/Mohansm1002/Food_Delivery_Application",
+  },
+  "laptop-price-prediction-system": {
+    live_url: "https://predict-laptop-price-6gz4.onrender.com/",
+    repo_url: "https://github.com/Mohansm1002/Predict_Laptop_Price",
+  },
+};
+
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ||
   "https://professional-portfolio-o6m9.onrender.com/api/v1"
@@ -571,10 +582,14 @@ function normalizeProject(project) {
     typeof project.category === "string"
       ? project.category
       : project.category?.name;
+  const defaultLinks = DEFAULT_PROJECT_LINKS[projectKey(project)] || {};
   const coverUrl =
     project.cover ||
     project.cover_image_url ||
+    project.coverImageUrl ||
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80";
+  const liveUrl = project.live_url || project.liveUrl || "";
+  const repoUrl = project.repo_url || project.repoUrl || "";
   return {
     ...project,
     category: categoryName || "Web",
@@ -589,11 +604,18 @@ function normalizeProject(project) {
     desc: project.description || project.desc || "",
     description: project.description || project.desc || "",
     tags: Array.isArray(project.tags) ? project.tags : [],
-    live_url: project.live_url || "#",
-    repo_url: project.repo_url || "#",
+    live_url: isUsableUrl(liveUrl) ? liveUrl : defaultLinks.live_url || "#",
+    repo_url: isUsableUrl(repoUrl) ? repoUrl : defaultLinks.repo_url || "#",
     is_featured: project.is_featured ?? false,
     is_published: project.is_published ?? true,
   };
+}
+
+function projectKey(project) {
+  return String(project.slug || project.title || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 function normalizeExperience(item) {

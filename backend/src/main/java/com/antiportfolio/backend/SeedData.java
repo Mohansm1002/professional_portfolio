@@ -16,6 +16,10 @@ public class SeedData {
     private static final String GITHUB_URL = "https://github.com/Mohansm1002";
     private static final String LINKEDIN_URL = "https://www.linkedin.com/in/mohan-mohan-b45222259?utm_source=share_via&utm_content=profile&utm_medium=member_android";
     private static final String EMAIL_URL = "mailto:mohansm1002@gmail.com";
+    private static final String FOOD_DELIVERY_LIVE_URL = "https://food-delivery-application-o1ww.onrender.com/";
+    private static final String FOOD_DELIVERY_REPO_URL = "https://github.com/Mohansm1002/Food_Delivery_Application";
+    private static final String LAPTOP_PRICE_LIVE_URL = "https://predict-laptop-price-6gz4.onrender.com/";
+    private static final String LAPTOP_PRICE_REPO_URL = "https://github.com/Mohansm1002/Predict_Laptop_Price";
 
     @Bean
     CommandLineRunner seedPortfolioData(
@@ -204,6 +208,8 @@ public class SeedData {
                         "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
                         "Developed a full-stack food delivery web application that lets users browse restaurants, view menus, add items to a cart, place orders, and manage order flow.",
                         List.of("HTML", "CSS", "JavaScript", "React.js", "Node.js", "MySQL", "Git"),
+                        FOOD_DELIVERY_LIVE_URL,
+                        FOOD_DELIVERY_REPO_URL,
                         1
                     ),
                     project(
@@ -213,6 +219,8 @@ public class SeedData {
                         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
                         "Developed a machine learning model to predict laptop prices based on processor, RAM, storage, GPU, and display features, with a Streamlit interface for user input.",
                         List.of("Python", "Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Streamlit", "Git"),
+                        LAPTOP_PRICE_LIVE_URL,
+                        LAPTOP_PRICE_REPO_URL,
                         2
                     ),
                     project(
@@ -222,10 +230,14 @@ public class SeedData {
                         "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=800&q=80",
                         "Developed a Java-based train ticket booking system using OOP concepts for train search, seat availability, booking, cancellation, and fare calculation.",
                         List.of("Java", "OOP", "Git"),
+                        "#",
+                        "#",
                         3
                     )
                 ));
             }
+            setProjectLinks(projects, "food-delivery-application", FOOD_DELIVERY_LIVE_URL, FOOD_DELIVERY_REPO_URL);
+            setProjectLinks(projects, "laptop-price-prediction-system", LAPTOP_PRICE_LIVE_URL, LAPTOP_PRICE_REPO_URL);
 
             if (experience.count() == 0) {
                 experience.saveAll(List.of(
@@ -329,15 +341,15 @@ public class SeedData {
         return item;
     }
 
-    private static Project project(String title, String slug, ProjectCategory category, String coverImageUrl, String description, List<String> tags, int orderIndex) {
+    private static Project project(String title, String slug, ProjectCategory category, String coverImageUrl, String description, List<String> tags, String liveUrl, String repoUrl, int orderIndex) {
         Project item = new Project();
         item.title = title;
         item.slug = slug;
         item.category = category;
         item.coverImageUrl = coverImageUrl;
         item.description = description;
-        item.liveUrl = "#";
-        item.repoUrl = "#";
+        item.liveUrl = liveUrl;
+        item.repoUrl = repoUrl;
         item.isFeatured = orderIndex == 1;
         item.isPublished = true;
         item.tags = tags;
@@ -349,6 +361,23 @@ public class SeedData {
         item.images = List.of(image);
 
         return item;
+    }
+
+    private static void setProjectLinks(ProjectRepository projects, String slug, String liveUrl, String repoUrl) {
+        projects.findBySlug(slug).ifPresent(project -> {
+            boolean changed = false;
+            if (!liveUrl.equals(project.liveUrl)) {
+                project.liveUrl = liveUrl;
+                changed = true;
+            }
+            if (!repoUrl.equals(project.repoUrl)) {
+                project.repoUrl = repoUrl;
+                changed = true;
+            }
+            if (changed) {
+                projects.save(project);
+            }
+        });
     }
 
     private static ExperienceEntry experience(String role, String company, String start, String end, boolean present, String description, int orderIndex) {
