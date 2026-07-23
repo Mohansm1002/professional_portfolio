@@ -6,8 +6,8 @@ import { sendContactMessage } from '../../lib/api';
 
 const contactInfo = {
   email: 'mohansm1002@gmail.com',
-  phone: '+1 (555) 000-1234',
-  location: 'San Francisco, CA',
+  phone: '+91 6380751915',
+  location: 'Tirunelveli, Tamil Nadu',
 };
 
 const socialIconMap = {

@@ -11,6 +11,14 @@ import {
 export const DEFAULT_RESUME_URL =
   "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing";
 
+const DEFAULT_ABOUT_PHOTO_URL =
+  "https://lh3.googleusercontent.com/d/1Dki8UacpcDhZ-ZdiD1hlOmtGipuUwW2z=w1000?authuser=2";
+
+const OLD_ABOUT_PHOTO_URLS = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+];
+
 const DEFAULT_SOCIAL_LINK_URLS = {
   github: "https://github.com/Mohansm1002",
   linkedin: "https://www.linkedin.com/in/mohan-mohan-b45222259?utm_source=share_via&utm_content=profile&utm_medium=member_android",
@@ -30,8 +38,7 @@ const ADMIN_SESSION_EXPIRED_EVENT = "portfolio-admin-session-expired";
 
 const defaultAbout = {
   heading: "B.Tech IT Student & Full Stack Developer",
-  photo_url:
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+  photo_url: DEFAULT_ABOUT_PHOTO_URL,
   bio: "I am a passionate and dedicated B.Tech Information Technology student with strong knowledge of programming and web development. I build responsive web applications using HTML, CSS, JavaScript, React.js, Java, Node.js, Express.js, and MySQL, and I am looking for an entry-level opportunity to contribute to innovative projects.",
   highlights: [
     "Full Stack Developer Intern at Roriri Software Solutions PVT. LTD.",
@@ -482,10 +489,14 @@ function normalizeAbout(about = defaultAbout) {
   const cvUrl = isUsableUrl(about?.cv_url)
     ? about.cv_url
     : defaultAbout.cv_url;
+  const photoUrl = isUsableUrl(about?.photo_url) && !isOldAboutPhotoUrl(about.photo_url)
+    ? about.photo_url
+    : defaultAbout.photo_url;
 
   return {
     ...defaultAbout,
     ...about,
+    photo_url: resolveImageUrl(photoUrl),
     cv_url: resolvePublicUrl(cvUrl),
     highlights:
       Array.isArray(about?.highlights) && about.highlights.length
@@ -600,7 +611,7 @@ function normalizeExperience(item) {
 
   return {
     ...item,
-    company_logo_url: resolveImageUrl(companyLogoUrl),
+    company_logo_url: isUsableUrl(companyLogoUrl) ? resolveImageUrl(companyLogoUrl) : "",
     start,
     start_date: start,
     end,
@@ -735,6 +746,10 @@ function resolvePublicUrl(value) {
 
 function isUsableUrl(value) {
   return typeof value === "string" && value.trim() !== "" && value.trim() !== "#";
+}
+
+function isOldAboutPhotoUrl(value) {
+  return OLD_ABOUT_PHOTO_URLS.includes(value);
 }
 
 function isPublicUploadUrl(value) {

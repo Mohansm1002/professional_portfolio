@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Building2, CalendarDays, GraduationCap } from 'lucide-react';
+import { Building2, CalendarDays, GraduationCap, MonitorSmartphone } from 'lucide-react';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 26, filter: 'blur(8px)' },
@@ -10,6 +10,29 @@ const cardVariants = {
     filter: 'blur(0px)',
     transition: { delay: Math.min(i * 0.07, 0.28), duration: 0.55, ease: 'easeOut' },
   }),
+};
+
+const isUsableLogo = (value) => Boolean(value && value !== '#');
+
+const ExperienceLogo = ({ item, isEducation }) => {
+  const [logoFailed, setLogoFailed] = useState(false);
+  const Icon = isEducation ? GraduationCap : MonitorSmartphone;
+  const showLogo = isUsableLogo(item.company_logo_url) && !logoFailed;
+
+  return (
+    <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-purple-400/25 bg-purple-400/10 text-purple-300 shadow-lg shadow-purple-500/10 transition-transform duration-300 group-hover:scale-105 sm:h-16 sm:w-16">
+      {showLogo ? (
+        <img
+          src={item.company_logo_url}
+          alt=""
+          className="h-8 w-8 object-contain sm:h-10 sm:w-10"
+          onError={() => setLogoFailed(true)}
+        />
+      ) : (
+        <Icon size={30} />
+      )}
+    </div>
+  );
 };
 
 const Experience = ({ experience = [] }) => (
@@ -28,7 +51,6 @@ const Experience = ({ experience = [] }) => (
       <div className="space-y-5">
         {experience.map((item, i) => {
           const isEducation = item.type === 'education';
-          const Icon = isEducation ? GraduationCap : Briefcase;
 
           return (
             <motion.div
@@ -42,12 +64,7 @@ const Experience = ({ experience = [] }) => (
               className="glass-card group overflow-hidden p-6 sm:p-7"
             >
               <div className="flex flex-col gap-5 md:flex-row md:items-start">
-                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-purple-400/25 bg-purple-400/10 text-purple-300 shadow-lg shadow-purple-500/10 transition-transform duration-300 group-hover:scale-105">
-                  {item.company_logo_url
-                    ? <img src={item.company_logo_url} alt="" className="h-8 w-8 object-contain" />
-                    : <Icon size={28} />
-                  }
-                </div>
+                <ExperienceLogo item={item} isEducation={isEducation} />
 
                 <div className="min-w-0 flex-1">
                   <div className="mb-3 flex flex-wrap items-center gap-2">

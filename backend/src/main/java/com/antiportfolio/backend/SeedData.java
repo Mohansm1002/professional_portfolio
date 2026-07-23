@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SeedData {
     private static final String DEFAULT_RESUME_URL = "https://drive.google.com/file/d/1u4_uwM0rlibn2P8SDm61nKDUbYLFmKOx/view?usp=sharing";
+    private static final String DEFAULT_ABOUT_PHOTO_URL = "https://lh3.googleusercontent.com/d/1Dki8UacpcDhZ-ZdiD1hlOmtGipuUwW2z=w1000?authuser=2";
+    private static final String OLD_ABOUT_PHOTO_URL = "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80";
     private static final String GITHUB_URL = "https://github.com/Mohansm1002";
     private static final String LINKEDIN_URL = "https://www.linkedin.com/in/mohan-mohan-b45222259?utm_source=share_via&utm_content=profile&utm_medium=member_android";
     private static final String EMAIL_URL = "mailto:mohansm1002@gmail.com";
@@ -92,13 +94,21 @@ public class SeedData {
                     "Comfortable with CRUD operations, MySQL databases, Git, GitHub, VS Code, and Postman.",
                     "Strong problem-solving mindset, quick learning ability, and time management."
                 );
-                content.photoUrl = "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80";
+                content.photoUrl = DEFAULT_ABOUT_PHOTO_URL;
                 content.cvUrl = DEFAULT_RESUME_URL;
                 about.save(content);
             } else {
                 about.findFirstByOrderByIdAsc().ifPresent(content -> {
+                    boolean changed = false;
+                    if (!isUsableUrl(content.photoUrl) || OLD_ABOUT_PHOTO_URL.equals(content.photoUrl)) {
+                        content.photoUrl = DEFAULT_ABOUT_PHOTO_URL;
+                        changed = true;
+                    }
                     if (!isUsableUrl(content.cvUrl)) {
                         content.cvUrl = DEFAULT_RESUME_URL;
+                        changed = true;
+                    }
+                    if (changed) {
                         about.save(content);
                     }
                 });
